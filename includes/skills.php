@@ -1,39 +1,11 @@
 <?php
-// skills-data.php
-$skills = [
-    // Frontend
-    ['name' => 'HTML/CSS', 'level' => 85, 'category' => 'frontend', 'years' => 2],
-    ['name' => 'JavaScript', 'level' => 70, 'category' => 'frontend', 'years' => 2],
-    ['name' => 'React', 'level' => 50, 'category' => 'frontend', 'years' => 1],
-    ['name' => 'Tailwind CSS', 'level' => 75, 'category' => 'frontend', 'years' => 1],
-    ['name' => 'Next.js', 'level' => 60, 'category' => 'frontend', 'years' => .5],
-    
-    // Backend
-    ['name' => 'PHP', 'level' => 80, 'category' => 'backend', 'years' => 2],
-    ['name' => 'Laravel', 'level' => 60, 'category' => 'backend', 'years' => 2],
-    ['name' => 'MySQL', 'level' => 80, 'category' => 'backend', 'years' => 2],
-    ['name' => 'Supabase', 'level' => 50, 'category' => 'backend', 'years' => .5],
-    ['name' => 'Trpc', 'level' => 50, 'category' => 'backend', 'years' => .5],
-    
-    // Tools & Platforms
-    ['name' => 'Git/GitHub', 'level' => 80, 'category' => 'tools', 'years' => 2],
-    ['name' => 'Figma', 'level' => 30, 'category' => 'tools', 'years' => 1],
-    ['name' => 'VS Code', 'level' => 90, 'category' => 'tools', 'years' => 4],
-];
 
-$categories = [
-    ['id' => 'all', 'label' => 'All Skills'],
-    ['id' => 'frontend', 'label' => 'Frontend'],
-    ['id' => 'backend', 'label' => 'Backend'],
-    ['id' => 'tools', 'label' => 'Tools & Platforms'],
-];
-
-function skillLevelToLabel($level) {
-    if ($level >= 90) return "Expert";
-    if ($level >= 70) return "Advanced";
-    if ($level >= 50) return "Intermediate";
-    return "Beginner";
-}
+    function skillLevelToLabel($level) {
+        if ($level >= 90) return "Expert";
+        if ($level >= 70) return "Advanced";
+        if ($level >= 50) return "Intermediate";
+        return "Beginner";
+    }
 ?>
 <section id="skills" class="py-28 min-h-screen px-4 relative bg-gradient-to-b from-gray-100 to-white dark:from-gray-900 dark:to-gray-800">
     <div class="container mx-auto max-w-7xl">
@@ -75,18 +47,18 @@ function skillLevelToLabel($level) {
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="font-semibold text-lg text-gray-900 dark:text-white">
-                                <?= $skill['name'] ?>
+                                <?= $skill['skill_name'] ?>
                             </h3>
                         </div>
                         <span class="text-blue-600 dark:text-blue-400 font-medium">
-                            <?= $skill['level'] ?>%
+                            <?= $skill['proficiency'] ?>%
                         </span>
                     </div>
 
                     <div class="w-full bg-gray-200 dark:bg-gray-700 h-2.5 rounded-full overflow-hidden mb-1">
                         <div 
                             class="progress-bar bg-gradient-to-r from-blue-500 to-blue-400 dark:from-blue-600 dark:to-blue-500 h-2.5 rounded-full"
-                            style="width: <?= $skill['level'] ?>%"
+                            style="width: <?= $skill['proficiency'] ?>%"
                         ></div>
                     </div>
 
@@ -95,7 +67,7 @@ function skillLevelToLabel($level) {
                             Proficiency level
                         </span>
                         <span class="text-xs text-gray-500 dark:text-gray-400">
-                            <?= skillLevelToLabel($skill['level']) ?>
+                            <?= skillLevelToLabel($skill['proficiency']) ?>
                         </span>
                     </div>
                 </div>
@@ -104,51 +76,3 @@ function skillLevelToLabel($level) {
     </div>
 </section>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize progress bar animations
-    const progressBars = document.querySelectorAll('.progress-bar');
-    
-    progressBars.forEach(bar => {
-        const level = bar.style.width;
-        bar.style.width = '0%';
-        
-        setTimeout(() => {
-            bar.style.width = level;
-        }, 300);
-    });
-    
-    // Category filtering functionality
-    const categoryButtons = document.querySelectorAll('.category-btn');
-    const skillCards = document.querySelectorAll('.skill-card');
-    
-    categoryButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const selectedCategory = this.getAttribute('data-category');
-            
-            // Update active button styling
-            categoryButtons.forEach(btn => {
-                if (btn === this) {
-                    btn.classList.add('category-active');
-                    btn.classList.remove('bg-gray-200', 'text-gray-800', 'hover:bg-gray-300', 'dark:bg-gray-700', 'dark:text-gray-200', 'dark:hover:bg-gray-600');
-                } else {
-                    btn.classList.remove('category-active');
-                    btn.classList.add('bg-gray-200', 'text-gray-800', 'hover:bg-gray-300', 'dark:bg-gray-700', 'dark:text-gray-200', 'dark:hover:bg-gray-600');
-                }
-            });
-            
-            // Filter skills
-            skillCards.forEach(card => {
-                const cardCategory = card.getAttribute('data-category');
-                if (selectedCategory === 'all' || cardCategory === selectedCategory) {
-                    card.classList.remove('hidden');
-                    setTimeout(() => card.classList.add('visible'), 10);
-                } else {
-                    card.classList.remove('visible');
-                    setTimeout(() => card.classList.add('hidden'), 10);
-                }
-            });
-        });
-    });
-});
-</script>

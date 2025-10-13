@@ -1,27 +1,3 @@
-<?php
-$projects = [
-    [
-        'id' => 1,
-        'title' => "Navigatormaritime",
-        'description' => "A Clone Website of Navigatormatirime",
-        'image' => "./assets/images/projects/4.png",
-        'tags' => ["HTML", "CSS", "JS", "Bootstrap" ,"JQUERY", "MYSQL", "PHP"],
-        'demoUrl' => 'https://navigatormaritime-clone.infinityfreeapp.com/',
-        'githubUrl' => "https://github.com/CODERELY07/navigatormaritime"
-    ],
-    [
-        'id' => 3,
-        'title' => "WataShop E-Commerce",
-        'description' => "E-Commerce Platform. Use FakeStore Api ",
-        'image' => "./assets/images/projects/5.png",
-        'tags' => ["React", "Tailwind", "External API"],
-        'demoUrl' => 'https://e-commerce-ten-khaki-53.vercel.app/',
-        'githubUrl' => "https://github.com/CODERELY07/E-Commerce"
-    ],
-];
-?>
-
-<!-- Add Lucide Icons CDN -->
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
 <section id='projects' class='py-24 min-h-screen px-4 relative bg-white dark:bg-gray-900'>
@@ -44,10 +20,7 @@ $projects = [
         <div class='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
             <?php foreach ($projects as $project): ?>
                 <div class='group bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col h-full border border-gray-200 dark:border-gray-700'>
-                    <a
-                        href="<?= $project['demoUrl'] ? $project['demoUrl'] : '/project/' . $project['id'] ?>"
-                        class='block'
-                    >
+                    <a href="<?= $project['demo_url'] ? $project['demo_url'] : '/project/' . $project['id'] ?>" class='block'>
                         <div class='h-48 overflow-hidden relative'>
                             <img
                                 src="<?= $project['image'] ?>"
@@ -55,8 +28,6 @@ $projects = [
                                 class='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
                                 onerror="this.src='https://picsum.photos/400/200?random=<?= $project['id'] ?>'"
                             />
-
-                            <!-- Hover Overlay -->
                             <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 <span class="text-white text-lg font-semibold">VISIT</span>
                             </div>
@@ -64,10 +35,7 @@ $projects = [
                     </a>
 
                     <div class='p-6 flex-1 flex flex-col'>
-                        <a
-                            href="<?= $project['demoUrl'] ? $project['demoUrl'] : '/project/' . $project['id'] ?>"
-                            class='block flex-1'
-                        >
+                        <a href="<?= $project['demo_url'] ? $project['demo_url'] : '/project/' . $project['id'] ?>" class='block flex-1'>
                             <h3 class='text-xl font-semibold mb-2 text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors'>
                                 <?= htmlspecialchars($project['title']) ?>
                             </h3>
@@ -78,34 +46,22 @@ $projects = [
                         
                         <div class='flex flex-wrap gap-2 mb-4'>
                             <?php foreach ($project['tags'] as $tag): ?>
-                                <span
-                                    class="px-3 py-1 text-xs font-medium rounded-full border bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                                >
+                                <span class="px-3 py-1 text-xs font-medium rounded-full border bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600">
                                     <?= htmlspecialchars($tag) ?>
                                 </span>
                             <?php endforeach; ?>
                         </div>
                         
                         <div class='flex gap-3 mt-auto'>
-                            <?php if (!empty($project['githubUrl'])): ?>
-                                <a
-                                    href="<?= $project['githubUrl'] ?>"
-                                    class='text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1'
-                                    target='_blank'
-                                    rel="noopener noreferrer"
-                                >
+                            <?php if (!empty($project['github_url'])): ?>
+                                <a href="<?= $project['github_url'] ?>" class='text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1' target='_blank' rel="noopener noreferrer">
                                     <i data-lucide="github" width="18" height="18"></i>
                                     <span class="text-sm">Code</span>
                                 </a>
                             <?php endif; ?>
                             
-                            <?php if (!empty($project['demoUrl'])): ?>
-                                <a
-                                    href="<?= $project['demoUrl'] ?>"
-                                    class='text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1 ml-auto'
-                                    target='_blank'
-                                    rel="noopener noreferrer"
-                                >
+                            <?php if (!empty($project['demo_url'])): ?>
+                                <a href="<?= $project['demo_url'] ?>" class='text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1 ml-auto' target='_blank' rel="noopener noreferrer">
                                     <span class="text-sm">Live Demo</span>
                                     <i data-lucide="external-link" width="16" height="16"></i>
                                 </a>
@@ -117,12 +73,10 @@ $projects = [
         </div>
 
         <div class="text-center mt-12">
-            <a
-                class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold rounded-full shadow-lg transition-transform duration-300 hover:scale-105 hover:from-blue-400 hover:to-indigo-400"
-                href="https://github.com/CODERELY07"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
+            <a class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold rounded-full shadow-lg transition-transform duration-300 hover:scale-105 hover:from-blue-400 hover:to-indigo-400"
+               href="https://github.com/CODERELY07"
+               target="_blank"
+               rel="noopener noreferrer">
                 Check My GitHub <i data-lucide="arrow-right" width="16" height="16"></i>
             </a>
         </div>
@@ -130,15 +84,5 @@ $projects = [
 </section>
 
 <script>
-    // Initialize Lucide icons
     lucide.createIcons();
 </script>
-
-<style>
-    .line-clamp-3 {
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-</style>

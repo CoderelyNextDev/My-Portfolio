@@ -1,11 +1,11 @@
-<section id="hero" class="relative mt-15 md:mt-0 min-h-screen flex flex-col items-center justify-center px-4">
+<!-- NOTE:: I didn't use inline css -->
+<section id="hero" class="relative mt-5 md:mt-0 min-h-screen flex flex-col items-center justify-center px-4">
   <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col lg:flex-row items-center gap-8 py-8">
-      <!-- Profile Image -->
       <div class="w-full md:w-1/3 flex justify-center">
-        <div class="relative">
+        <div class="relative pt-10">
           <img
-            src="./assets/images/profile.jpg"
+            src="  <?= $personalInfo['profile_picture_url'] ?>"
             alt="Mark Ely Calipjo"
             class="rounded-full w-70 h-70 object-cover border-4 border-white dark:border-gray-700 shadow-lg"
             onerror="this.onerror=null; this.src='/placeholder-profile.jpg';"
@@ -17,7 +17,7 @@
       <div class="w-full md:w-2/3 space-y-4">
         <div class="text-center md:text-left">
           <h1 class="text-4xl font-bold text-gray-900 dark:text-white opacity-0 animate-fade-in">
-            Mark Ely Calipjo
+            <?= $personalInfo['full_name'] ?>
           </h1>
           <p class="text-xl text-gray-800 dark:text-gray-300 mt-2">
             <span class="opacity-0 animate-fade-in-delay-2">Web Developer & </span>
@@ -51,7 +51,6 @@
           </div>
         </div>
 
-        <!-- Quote & Resume -->
         <div class="mx-auto rounded-xl mt-8">
           <blockquote class="text-left">
             <p class="text-xl italic text-gray-800 dark:text-gray-300 opacity-0 animate-fade-in">
@@ -75,7 +74,6 @@
     </div>
   </div>
 
-  <!-- Scroll Indicator -->
   <div class="hidden md:flex absolute bottom-8 left-1/2 transform -translate-x-1/2 flex-col items-center animate-bounce">
     <span class="text-sm text-gray-500 dark:text-gray-400 mb-2">Scroll</span>
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

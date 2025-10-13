@@ -1,6 +1,6 @@
 <section id="contact" class="py-32 px-6 relative bg-white dark:bg-gray-900">
   <div class="max-w-6xl mx-auto">
-    <!-- Section Header (matched to previous layout) -->
+    <!-- Section Header -->
     <div class="text-center mb-20" data-aos="fade-up">
       <span class="inline-block text-blue-600 dark:text-blue-400 font-medium mb-2 tracking-wider">CONTACT</span>
       <h2 class="text-4xl md:text-5xl font-bold mt-3 mb-4 text-gray-900 dark:text-white">
@@ -27,7 +27,7 @@
     </div>
 
     <div class="flex justify-center items-center">
-      <!-- Left Column - Contact Info -->
+
       <div class="lg:col-span-5">
         <div class="space-y-8">
           <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
@@ -57,10 +57,10 @@
                   Email
                 </h4>
                 <a
-                  href="mailto:calipjo.markely@gmail.com"
+                  href="mailto:<?= $personalInfo['email'] ?>"
                   class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
-                  calipjo.markely@gmail.com
+                  <?= $personalInfo['email'] ?>
                 </a>
               </div>
             </div>
@@ -86,7 +86,7 @@
                   Phone
                 </h4>
                 <span class="text-gray-700 dark:text-gray-300">
-                  +63 930 272 7854
+                   <?= $personalInfo['phone_number'] ?>
                 </span>
               </div>
             </div>

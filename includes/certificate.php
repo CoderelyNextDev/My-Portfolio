@@ -1,42 +1,5 @@
-<?php
-$certificates = [
-    [
-        "id" => 1,
-        "title" => "TechExplosion Certificate",
-        "image" => "./assets/images/certificates/1.jpg",
-        "description" => "Certificate of Participation in TechExplosion, a school-based web development and computer programming competition.",
-    ],
-    [
-        "id" => 2,
-        "title" => "2nd Place - TechExplosion",
-        "image" => "./assets/images/certificates/2.jpg",
-        "description" => "Awarded 2nd Place in TechExplosion, a school-wide competition where students from all year levels competed in web development. My project utilized Laravel and JavaScript.",
-    ],
-    [
-        "id" => 3,
-        "title" => "National Certificate II (NC II)",
-        "image" => "./assets/images/certificates/3.jpg",
-        "description" => "National Certificate II (NC II), awarded upon successful completion of technical competency requirements.",
-    ],
-    [
-        "id" => 4,
-        "title" => "Blockchain Workshop Certificate",
-        "image" => "./assets/images/certificates/5.jpg",
-        "description" => "Certificate of Participation in a specialized workshop focused on blockchain technology and its applications.",
-    ],
-    [
-        "id" => 5,
-        "title" => "12th BYCIT Certificate",
-        "image" => "./assets/images/certificates/7.png",
-        "description" => "Certificate of Participation in the 12th BYCIT event, a two-day mentorship and training program.",
-    ],
-];
-?>
-
 <section id="certificates" class="py-24 min-h-screen px-4 relative bg-white dark:bg-gray-900">
   <div class="container mx-auto max-w-7xl">
-    
-    <!-- Header (updated to match previous section styles) -->
     <div class="text-center mb-16" data-aos="fade-up">
       <span class="inline-block text-blue-600 dark:text-blue-400 font-medium mb-2 tracking-wider">Certificates</span>
       <h2 class="text-4xl md:text-5xl text-gray-900 dark:text-white font-bold mb-4">
@@ -51,8 +14,6 @@ $certificates = [
         Here are some of my certificates, showcasing my dedication and achievements in technology and development.
       </p>
     </div>
-
-    <!-- Certificates Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <?php foreach ($certificates as $index => $certificate): ?>
         <div
@@ -105,32 +66,5 @@ $certificates = [
 </section>
 
 <script>
-  // JavaScript for modal functionality
-  let certificatesData = <?php echo json_encode($certificates); ?>;
-  
-  function openModal(index) {
-      const certificate = certificatesData[index];
-      document.getElementById('modalImage').src = certificate.image;
-      document.getElementById('modalTitle').textContent = certificate.title;
-      document.getElementById('modalDescription').textContent = certificate.description;
-      document.getElementById('certificateModal').classList.remove('hidden');
-      document.getElementById('certificateModal').classList.add('flex');
-      document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal() {
-      document.getElementById('certificateModal').classList.add('hidden');
-      document.getElementById('certificateModal').classList.remove('flex');
-      document.body.style.overflow = 'auto';
-  }
-
-  // Close modal when clicking on background
-  document.getElementById('certificateModal').addEventListener('click', function(e) {
-      if (e.target === this) closeModal();
-  });
-
-  // Close modal with Escape key
-  document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeModal();
-  });
+    const certificatesData = <?php echo json_encode($certificates); ?>;
 </script>

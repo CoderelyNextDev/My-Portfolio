@@ -1,12 +1,11 @@
 <!-- about.php -->
 <section id="about" class="py-20 md:py-30 px-4 relative bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-900 dark:to-gray-800">
-  <!-- Background decorative elements -->
   <div class="absolute top-10 left-10 w-20 h-20 bg-blue-100/40 dark:bg-blue-900/30 rounded-full blur-xl"></div>
   <div class="absolute bottom-10 right-10 w-32 h-32 bg-purple-100/30 dark:bg-purple-900/30 rounded-full blur-xl"></div>
   
   <div class="container mx-auto max-w-6xl relative z-10">
     
-    <!-- Section Header with Animation -->
+    <!-- Section -->
     <div class="text-center mb-16" data-aos="fade-up">
       <span class="inline-block text-blue-600 dark:text-blue-400 font-medium mb-2 tracking-wider">ABOUT</span>
       <h2 class="text-4xl md:text-5xl text-gray-900 dark:text-white font-bold mb-4">
@@ -23,7 +22,6 @@
     <!-- About Content -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
       
-      <!-- Left: Description -->
       <div class="space-y-6" data-aos="fade-right">
         <h3 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
           Passionate <span class="text-blue-600 dark:text-blue-400">Web Developer</span> 
@@ -32,7 +30,7 @@
         <div class="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
           <p class="flex items-start">
             <span class="inline-block w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-            I'm a Web Developer passionate about building and managing websites. Skilled in both frontend and backend development, I specialize in creating seamless, dynamic digital experiences.
+            <?= $personalInfo['about_summary'] ?>
           </p>
           <p class="flex items-start">
             <span class="inline-block w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
@@ -153,7 +151,7 @@
   </div>
 </section>
 
-<!-- Include AOS library for animations (add to your head section) -->
+
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
