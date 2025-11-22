@@ -5,6 +5,27 @@ $username = "root";
 $password = "";
 
 try {
+    $dotenvPath = __DIR__ . '/../.env';
+    $env = [];
+
+    if (file_exists($dotenvPath)) {
+        $lines = file($dotenvPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line === '' || $line[0] === '#') {
+                continue;
+            }
+            $parts = explode('=', $line, 2);
+            if (count($parts) === 2) {
+                $key = trim($parts[0]);
+                $val = trim($parts[1]);
+                $val = trim($val, " \t\n\r\0\x0B\"'");
+                $env[$key] = $val;
+            }
+        }
+    }
+
+
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -60,6 +81,18 @@ try {
 
     $stmt = $pdo->query("SELECT * FROM experience ORDER BY start_date DESC");
     $experience = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $defaultEmail = $env['DEFAULT_USER_EMAIL'];
+    $defaultPassword = password_hash($env['DEFAULT_USER_PASSWORD'], PASSWORD_DEFAULT);
+
+    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+    $stmt->execute([$defaultEmail]);
+    $exists = $stmt->fetch();
+
+    if (!$exists) {
+        $insert = $pdo->prepare("INSERT INTO users (email, password) VALUES (?, ?)");
+        $insert->execute([$defaultEmail, $defaultPassword]);
+    }
 
 
 } catch (PDOException $e) {
