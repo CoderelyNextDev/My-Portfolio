@@ -24,6 +24,10 @@ if (empty($_SESSION['user_logged_in'])) {
 }
 
 $message = '';
+if (isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    unset($_SESSION['message']);
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
     $id = $_POST['id'] ?? '';
@@ -35,12 +39,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
     if ($id) {
         $stmt = $pdo->prepare("UPDATE skills SET skill_name=?, proficiency=?, category=?, years=? WHERE id=?");
         $stmt->execute([$skill_name, $proficiency, $category, $years, $id]);
-        $message = 'Skill updated successfully!';
+        $_SESSION['message'] = 'Skill updated successfully!';
     } else {
         $stmt = $pdo->prepare("INSERT INTO skills (skill_name, proficiency, category, years) VALUES (?, ?, ?, ?)");
         $stmt->execute([$skill_name, $proficiency, $category, $years]);
-        $message = 'Skill added successfully!';
+        $_SESSION['message'] = 'Skill added successfully!';
     }
+    
+    header('Location: manage_skills.php');
+    exit;
 }
 
 $skills = $pdo->query("SELECT * FROM skills ORDER BY id DESC")->fetchAll();
@@ -89,7 +96,7 @@ include './includes/head.php';
                             </label>
                             <input type="number" name="proficiency" id="skill_proficiency" 
                                    class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" 
-                                   min="0" max="100" placeholder="0-100">
+                                   min="0" max="100" placeholder="0-100" required>
                         </div>
 
                         <div>
@@ -98,17 +105,23 @@ include './includes/head.php';
                             </label>
                             <input type="number" step="0.1" name="years" id="skill_years" 
                                    class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" 
-                                   placeholder="e.g., 2.5">
+                                   placeholder="e.g., 2.5" required>
                         </div>
 
-                        <div class="md:col-span-2">
+                       <div class="md:col-span-2">
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                 Category
                             </label>
-                            <input type="text" name="category" id="skill_category" 
-                                   class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" 
-                                   placeholder="e.g., Frontend, Backend, Database">
+                            <select name="category" id="skill_category"
+                                class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                required>
+                                <option value="" disabled selected>Select Category</option>
+                                <option value="frontend">Frontend</option>
+                                <option value="backend">Backend</option>
+                                <option value="tools">Tools</option>
+                            </select>
                         </div>
+
                     </div>
 
                     <div class="flex gap-4 pt-4">

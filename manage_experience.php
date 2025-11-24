@@ -24,6 +24,10 @@ if (empty($_SESSION['user_logged_in'])) {
 }
 
 $message = '';
+if (isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    unset($_SESSION['message']);
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
     $id = $_POST['id'] ?? '';
@@ -33,16 +37,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
     $end_date = $_POST['end_date'] ?? null;
     $desc = $_POST['description'] ?? '';
 
+
+    if ($end_date === '0000-00-00' || $end_date === '') {
+        $end_date = null;
+    }
+
     if ($id) {
         $stmt = $pdo->prepare("UPDATE experience SET title=?, institution=?, start_date=?, end_date=?, description=? WHERE id=?");
         $stmt->execute([$title, $institution, $start_date, $end_date, $desc, $id]);
-        $message = "Experience updated successfully!";
+        $_SESSION['message'] = 'Experience updated successfully!';
     } else {
-        $stmt = $pdo->prepare("INSERT INTO experience (title,institution,start_date,end_date,description) VALUES (?,?,?,?,?)");
+        $stmt = $pdo->prepare("INSERT INTO experience (title, institution, start_date, end_date, description) VALUES (?,?,?,?,?)");
         $stmt->execute([$title, $institution, $start_date, $end_date, $desc]);
-        $message = "Experience added successfully!";
+        $_SESSION['message'] = 'Experience added successfully!';
     }
+
+    header('Location: manage_experience.php');
+    exit;
 }
+
 
 $items = $pdo->query("SELECT * FROM experience ORDER BY start_date DESC")->fetchAll();
 include './includes/head.php';
@@ -116,7 +129,7 @@ include './includes/head.php';
                             </label>
                             <textarea name="description" id="description" rows="5"
                                       class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
-                                      placeholder="Describe your responsibilities and achievements..."></textarea>
+                                      placeholder="Describe your responsibilities and achievements..." required></textarea>
                         </div>
                     </div>
 

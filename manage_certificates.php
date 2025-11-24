@@ -32,6 +32,10 @@ if (empty($_SESSION['user_logged_in'])) {
 }
 
 $message = '';
+if (isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    unset($_SESSION['message']);
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
     $id = $_POST['id'] ?? '';
@@ -59,10 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
                 }
                 $image = $upload_path;
             } else {
-                $message = "Failed to upload image!";
+                $_SESSION['message'] = 'Failed to upload image!';
             }
         } else {
-            $message = "Invalid file type. Only JPG, PNG, GIF, WEBP, and PDF allowed!";
+             $_SESSION['message'] = '"Invalid file type. Only JPG, PNG, GIF, WEBP, and PDF allowed!"';
         }
     }
 
@@ -70,13 +74,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
         if ($id) {
             $stmt = $pdo->prepare("UPDATE certificates SET title=?, image=?, description=? WHERE id=?");
             $stmt->execute([$title, $image, $description, $id]);
-            $message = "Certificate updated successfully!";
+            $_SESSION['message'] = 'Certificate updated successfully!';
         } else {
             $stmt = $pdo->prepare("INSERT INTO certificates (title,image,description) VALUES (?,?,?)");
             $stmt->execute([$title, $image, $description]);
-            $message = "Certificate added successfully!";
+            $_SESSION['message'] = 'Certificate added successfully!';
         }
     }
+    header('Location: manage_certificates.php');
+    exit;
 }
 
 $items = $pdo->query("SELECT * FROM certificates ORDER BY id DESC")->fetchAll();
@@ -130,10 +136,10 @@ include './includes/head.php';
                                         <svg class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
                                         </svg>
-                                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span></p>
                                         <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, PDF (MAX. 5MB)</p>
                                     </div>
-                                    <input type="file" name="image" id="image_upload" accept="image/*,.pdf" class="hidden">
+                                    <input type="file" name="image" id="image_upload" accept="image/*,.pdf" class="hidden" required onchange="showCertificatePreview(event)">
                                 </label>
                             </div>
                             <div id="current_image_preview" class="mt-4"></div>
@@ -145,7 +151,7 @@ include './includes/head.php';
                             </label>
                             <textarea name="description" id="description" rows="4"
                                       class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition"
-                                      placeholder="Add details about the certification, issuing organization, etc..."></textarea>
+                                      placeholder="Add details about the certification, issuing organization, etc..." required></textarea>
                         </div>
                     </div>
 
@@ -251,25 +257,101 @@ include './includes/head.php';
     </div>
 
     <script>
+    function showCertificatePreview(event) {
+        const input = event.target;
+        const previewContainer = document.getElementById('current_image_preview');
+        
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const fileName = file.name;
+            const fileSize = (file.size / 1024 / 1024).toFixed(2);
+            const fileExtension = fileName.split('.').pop().toLowerCase();
+            
+            if (fileExtension === 'pdf') {
+                previewContainer.innerHTML = 
+                    '<div class="p-4 bg-gradient-to-r from-green-50 to-yellow-50 dark:from-green-900/20 dark:to-yellow-900/20 border-2 border-green-200 dark:border-green-800 rounded-xl">' +
+                    '<div class="flex items-start justify-between mb-3">' +
+                    '<div>' +
+                    '<p class="text-sm font-bold text-green-800 dark:text-green-300">✓ PDF Selected</p>' +
+                    '<p class="text-xs text-gray-600 dark:text-gray-400 mt-1">' + fileName + ' (' + fileSize + ' MB)</p>' +
+                    '</div>' +
+                    '<button type="button" onclick="clearCertificatePreview()" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">' +
+                    '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>' +
+                    '</svg>' +
+                    '</button>' +
+                    '</div>' +
+                    '<div class="flex items-center justify-center h-64 bg-white dark:bg-gray-800 rounded-lg border-2 border-gray-200 dark:border-gray-700">' +
+                    '<div class="text-center">' +
+                    '<svg class="w-20 h-20 mx-auto text-red-500 mb-4" fill="currentColor" viewBox="0 0 20 20">' +
+                    '<path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path>' +
+                    '</svg>' +
+                    '<p class="text-gray-600 dark:text-gray-400 font-medium">PDF Document</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '<p class="text-xs text-green-700 dark:text-green-400 mt-3 text-center font-medium">Preview - This PDF will be uploaded when you save</p>' +
+                    '</div>';
+            } else {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewContainer.innerHTML = 
+                        '<div class="p-4 bg-gradient-to-r from-green-50 to-yellow-50 dark:from-green-900/20 dark:to-yellow-900/20 border-2 border-green-200 dark:border-green-800 rounded-xl">' +
+                        '<div class="flex items-start justify-between mb-3">' +
+                        '<div>' +
+                        '<p class="text-sm font-bold text-green-800 dark:text-green-300">✓ Image Selected</p>' +
+                        '<p class="text-xs text-gray-600 dark:text-gray-400 mt-1">' + fileName + ' (' + fileSize + ' MB)</p>' +
+                        '</div>' +
+                        '<button type="button" onclick="clearCertificatePreview()" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">' +
+                        '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>' +
+                        '</svg>' +
+                        '</button>' +
+                        '</div>' +
+                        '<img src="' + e.target.result + '" class="w-full h-64 object-contain rounded-lg shadow-lg bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700">' +
+                        '<p class="text-xs text-green-700 dark:text-green-400 mt-3 text-center font-medium">Preview - This image will be uploaded when you save</p>' +
+                        '</div>';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    }
+
+    function clearCertificatePreview() {
+        document.getElementById('image_upload').value = '';
+        document.getElementById('current_image_preview').innerHTML = '';
+    }
+
     function edit(id, title, image, desc) {
         document.getElementById('id').value = id;
         document.getElementById('title').value = title;
         document.getElementById('existing_image').value = image;
         document.getElementById('description').value = desc;
         
+        const previewContainer = document.getElementById('current_image_preview');
+        
         if(image) {
             const isPdf = image.toLowerCase().endsWith('.pdf');
-            document.getElementById('current_image_preview').innerHTML = 
+            previewContainer.innerHTML = 
                 '<div class="p-4 bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-200 dark:border-yellow-800 rounded-xl">' +
-                '<p class="text-sm font-semibold text-yellow-900 dark:text-yellow-300 mb-3">Current File:</p>' +
+                '<p class="text-sm font-bold text-yellow-900 dark:text-yellow-300 mb-3">✓ Current Uploaded File</p>' +
                 (isPdf 
-                    ? '<a href="' + image + '" target="_blank" class="inline-flex items-center px-4 py-2 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 rounded-lg font-semibold"><svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path></svg>View PDF</a>'
-                    : '<img src="' + image + '" class="h-40 rounded-lg shadow-lg border-2 border-white dark:border-gray-700">'
+                    ? '<div class="flex items-center justify-center h-64 bg-white dark:bg-gray-800 rounded-lg border-2 border-gray-200 dark:border-gray-700">' +
+                      '<a href="' + image + '" target="_blank" class="text-center">' +
+                      '<svg class="w-20 h-20 mx-auto text-red-500 mb-4" fill="currentColor" viewBox="0 0 20 20">' +
+                      '<path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path>' +
+                      '</svg>' +
+                      '<span class="inline-flex items-center px-4 py-2 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 rounded-lg font-semibold">' +
+                      '<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">' +
+                      '<path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path>' +
+                      '</svg>View PDF</span>' +
+                      '</a>' +
+                      '</div>'
+                    : '<img src="' + image + '" class="w-full h-64 object-contain rounded-lg shadow-lg bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700">'
                 ) +
-                '<p class="text-xs text-yellow-700 dark:text-yellow-400 mt-3">Upload a new file to replace this one</p>' +
+                '<p class="text-xs text-yellow-700 dark:text-yellow-400 mt-3 text-center">Upload a new file above to replace this one</p>' +
                 '</div>';
         } else {
-            document.getElementById('current_image_preview').innerHTML = '';
+            previewContainer.innerHTML = '';
         }
         
         window.scrollTo({top: 0, behavior: 'smooth'});

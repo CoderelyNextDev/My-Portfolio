@@ -42,7 +42,7 @@
 
   <!-- Modal -->
   <div id="certificateModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-50 modal-fade-in">
-    <div class="relative max-w-4xl max-h-[90vh] flex flex-col items-center">
+    <div class="relative max-w-4xl max-h-[80vh] flex flex-col items-center ">
       <!-- Close Button -->
       <button
         onclick="closeModal()"
@@ -55,7 +55,7 @@
         id="modalImage"
         src=""
         alt="Certificate"
-        class="max-h-[80vh] rounded-lg shadow-2xl modal-content-scale"
+        class="max-h-[50vh] rounded-lg shadow-2xl modal-content-scale"
       />
       <div class="mt-4 text-white text-center">
         <h3 id="modalTitle" class="text-xl font-bold"></h3>

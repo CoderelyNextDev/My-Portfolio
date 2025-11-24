@@ -32,6 +32,10 @@ if (empty($_SESSION['user_logged_in'])) {
 }
 
 $message = '';
+if (isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    unset($_SESSION['message']);
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
     $id = $_POST['id'] ?? '';
@@ -61,24 +65,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
                 }
                 $image = $upload_path;
             } else {
-                $message = "Failed to upload image!";
+                $_SESSION['message'] = "Failed to upload image!";
+                header('Location: manage_projects.php');
+                exit;
             }
         } else {
-            $message = "Invalid file type. Only JPG, JPEG, PNG, GIF, and WEBP allowed!";
+            $_SESSION['message'] = "Invalid file type. Only JPG, JPEG, PNG, GIF, and WEBP allowed!";
+            header('Location: manage_projects.php');
+            exit;
         }
     }
 
-    if (!$message) {
-        if ($id) {
-            $stmt = $pdo->prepare("UPDATE projects SET title=?, description=?, image=?, demo_url=?, github_url=? WHERE id=?");
-            $stmt->execute([$title, $description, $image, $demo_url, $github_url, $id]);
-            $message = "Project updated!";
-        } else {
-            $stmt = $pdo->prepare("INSERT INTO projects (title, description, image, demo_url, github_url) VALUES (?,?,?,?,?)");
-            $stmt->execute([$title, $description, $image, $demo_url, $github_url]);
-            $message = "Project added!";
-        }
+    if ($id) {
+        $stmt = $pdo->prepare("UPDATE projects SET title=?, description=?, image=?, demo_url=?, github_url=? WHERE id=?");
+        $stmt->execute([$title, $description, $image, $demo_url, $github_url, $id]);
+        $_SESSION['message'] = "Project updated successfully!";
+    } else {
+        $stmt = $pdo->prepare("INSERT INTO projects (title, description, image, demo_url, github_url) VALUES (?,?,?,?,?)");
+        $stmt->execute([$title, $description, $image, $demo_url, $github_url]);
+        $_SESSION['message'] = "Project added successfully!";
     }
+    
+    header('Location: manage_projects.php');
+    exit;
 }
 
 $items = $pdo->query("SELECT * FROM projects ORDER BY id DESC")->fetchAll();
@@ -128,7 +137,7 @@ include './includes/head.php';
                             </label>
                             <textarea name="description" id="description" rows="4"
                                       class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                                      placeholder="Describe your project..."></textarea>
+                                      placeholder="Describe your project..." required></textarea>
                         </div>
 
                         <div class="md:col-span-2">
@@ -141,10 +150,10 @@ include './includes/head.php';
                                         <svg class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                         </svg>
-                                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span></p>
                                         <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF or WEBP</p>
                                     </div>
-                                    <input type="file" name="image" id="image_upload" accept="image/*" class="hidden">
+                                    <input type="file" name="image" id="image_upload" accept="image/*" class="hidden" required onchange="showImagePreview(event)">
                                 </label>
                             </div>
                             <div id="current_image_preview" class="mt-4"></div>
@@ -156,7 +165,7 @@ include './includes/head.php';
                             </label>
                             <input type="url" name="demo_url" id="demo_url" 
                                    class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                                   placeholder="https://demo.example.com">
+                                   placeholder="https://demo.example.com" required>
                         </div>
 
                         <div>
@@ -165,7 +174,7 @@ include './includes/head.php';
                             </label>
                             <input type="url" name="github_url" id="github_url" 
                                    class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                                   placeholder="https://github.com/username/repo">
+                                   placeholder="https://github.com/username/repo" required>
                         </div>
                     </div>
 
@@ -189,7 +198,6 @@ include './includes/head.php';
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-700/50">
                             <tr>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">ID</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Title</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Image</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Demo</th>
@@ -200,9 +208,6 @@ include './includes/head.php';
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             <?php foreach($items as $i): ?>
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300">
-                                    #<?= $i['id'] ?>
-                                </td>
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-300">
                                     <?= htmlspecialchars($i['title']) ?>
                                 </td>
@@ -273,6 +278,42 @@ include './includes/head.php';
     </div>
 
     <script>
+    function showImagePreview(event) {
+        const input = event.target;
+        const previewContainer = document.getElementById('current_image_preview');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            const fileName = input.files[0].name;
+            const fileSize = (input.files[0].size / 1024 / 1024).toFixed(2);
+            
+            reader.onload = function(e) {
+                previewContainer.innerHTML = 
+                    '<div class="p-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border-2 border-green-200 dark:border-green-800 rounded-xl">' +
+                    '<div class="flex items-start justify-between mb-3">' +
+                    '<div>' +
+                    '<p class="text-sm font-bold text-green-800 dark:text-green-300">✓ Image Selected</p>' +
+                    '<p class="text-xs text-gray-600 dark:text-gray-400 mt-1">' + fileName + ' (' + fileSize + ' MB)</p>' +
+                    '</div>' +
+                    '<button type="button" onclick="clearImagePreview()" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">' +
+                    '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>' +
+                    '</svg>' +
+                    '</button>' +
+                    '</div>' +
+                    '<img src="' + e.target.result + '" class="w-full h-64 object-contain rounded-lg shadow-lg bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700">' +
+                    '<p class="text-xs text-green-700 dark:text-green-400 mt-3 text-center font-medium">Preview - This image will be uploaded when you save</p>' +
+                    '</div>';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function clearImagePreview() {
+        document.getElementById('image_upload').value = '';
+        document.getElementById('current_image_preview').innerHTML = '';
+    }
+
     function edit(id, title, desc, image, demo, github) {
         document.getElementById('id').value = id;
         document.getElementById('title').value = title;
@@ -281,15 +322,17 @@ include './includes/head.php';
         document.getElementById('demo_url').value = demo;
         document.getElementById('github_url').value = github;
         
+        const previewContainer = document.getElementById('current_image_preview');
+        
         if(image) {
-            document.getElementById('current_image_preview').innerHTML = 
+            previewContainer.innerHTML = 
                 '<div class="p-4 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-xl">' +
-                '<p class="text-sm font-semibold text-blue-900 dark:text-blue-300 mb-3">Current Image:</p>' +
-                '<img src="' + image + '" class="h-40 rounded-lg shadow-lg border-2 border-white dark:border-gray-700">' +
-                '<p class="text-xs text-blue-700 dark:text-blue-400 mt-3">Upload a new image to replace this one</p>' +
+                '<p class="text-sm font-bold text-blue-900 dark:text-blue-300 mb-3">✓ Current Uploaded Image</p>' +
+                '<img src="' + image + '" class="w-full h-64 object-contain rounded-lg shadow-lg bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700">' +
+                '<p class="text-xs text-blue-700 dark:text-blue-400 mt-3 text-center">Upload a new file above to replace this image</p>' +
                 '</div>';
         } else {
-            document.getElementById('current_image_preview').innerHTML = '';
+            previewContainer.innerHTML = '';
         }
         
         window.scrollTo({top: 0, behavior: 'smooth'});
