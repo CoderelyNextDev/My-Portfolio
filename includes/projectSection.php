@@ -1,3 +1,7 @@
+<?php
+$placeholder = "https://static.vecteezy.com/system/resources/previews/022/014/063/original/missing-picture-page-for-website-design-or-mobile-app-design-no-image-available-icon-vector.jpg";
+?>
+
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
 <section id='projects' class='py-24 min-h-screen px-4 relative bg-white dark:bg-gray-900'>
@@ -19,14 +23,17 @@
 
         <div class='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
             <?php foreach ($projects as $project): ?>
+                <?php
+                    $image = !empty($project['image']) ? $project['image'] : $placeholder;
+                ?>
                 <div class='group bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col h-full border border-gray-200 dark:border-gray-700'>
-                    <a href="<?= $project['demo_url'] ? $project['demo_url'] : '/project/' . $project['id'] ?>" class='block'>
+                    <a target="_blank"  href="<?= $project['demo_url'] ? $project['demo_url'] : '/project/' . $project['id'] ?>" class='block'>
                         <div class='h-48 overflow-hidden relative'>
                             <img
-                                src="<?= $project['image'] ?>"
+                                src="<?= $image ?>"
                                 alt="<?= htmlspecialchars($project['title']) ?>"
                                 class='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
-                                onerror="this.src='https://picsum.photos/400/200?random=<?= $project['id'] ?>'"
+                                onerror="this.src='<?= $placeholder ?>'"
                             />
                             <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 <span class="text-white text-lg font-semibold">VISIT</span>
@@ -35,7 +42,7 @@
                     </a>
 
                     <div class='p-6 flex-1 flex flex-col'>
-                        <a href="<?= $project['demo_url'] ? $project['demo_url'] : '/project/' . $project['id'] ?>" class='block flex-1'>
+                        <a href="<?= $project['demo_url'] ? $project['demo_url'] : '/project/' . $project['id'] ?>" target="_blank" class='block flex-1'>
                             <h3 class='text-xl font-semibold mb-2 text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors'>
                                 <?= htmlspecialchars($project['title']) ?>
                             </h3>

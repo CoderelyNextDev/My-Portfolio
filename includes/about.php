@@ -32,14 +32,6 @@
             <span class="inline-block w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
             <?= $personalInfo['about_summary'] ?>
           </p>
-          <p class="flex items-start">
-            <span class="inline-block w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-            Beyond coding, I thrive on problem-solving and innovation, constantly seeking ways to optimize and improve. I enjoy collaborating with like-minded professionals, sharing knowledge, and staying current with emerging technologies.
-          </p>
-          <p class="flex items-start">
-            <span class="inline-block w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-            With a growth mindset and passion for technology, I'm eager to take on new challenges that push my boundaries. I'm currently open to exciting opportunities where I can contribute meaningfully while continuing to learn and grow.
-          </p>
         </div>
 
         <div class="pt-4 flex flex-wrap gap-4">

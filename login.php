@@ -36,8 +36,15 @@ include './includes/head.php';
 
 
 <body class="h-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-
-    <div class="flex min-h-full items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+    <div class="max-w-[400px] mx-auto p-2">
+        <p class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Email: calipjo.markely@gmail.com
+        </p>
+        <p class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Password: password123
+        </p>
+    </div>
+    <div class="flex min-h-full items-center justify-center px-4  sm:px-6 lg:px-8">
         <div class="w-full max-w-md space-y-8 animate-fade-in">
 
             <div class="text-center">
@@ -108,21 +115,6 @@ include './includes/head.php';
                                 placeholder="••••••••"
                             >
                         </div>
-                    </div>
-
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <input id="remember-me" name="remember-me" type="checkbox"
-                                class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                            <label for="remember-me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                                Remember me
-                            </label>
-                        </div>
-
-                        <a href="forgot-password.php"
-                            class="text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
-                            Forgot password?
-                        </a>
                     </div>
 
                     <button type="submit"

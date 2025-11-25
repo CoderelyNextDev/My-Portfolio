@@ -1,3 +1,6 @@
+<?php
+$placeholder = "https://static.vecteezy.com/system/resources/previews/022/014/063/original/missing-picture-page-for-website-design-or-mobile-app-design-no-image-available-icon-vector.jpg";
+?>
 <section id="certificates" class="py-24 min-h-screen px-4 relative bg-white dark:bg-gray-900">
   <div class="container mx-auto max-w-7xl">
     <div class="text-center mb-16" data-aos="fade-up">
@@ -14,16 +17,21 @@
         Here are some of my certificates, showcasing my dedication and achievements in technology and development.
       </p>
     </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <?php foreach ($certificates as $index => $certificate): ?>
+        <?php
+          $image = !empty($certificate['image']) ? $certificate['image'] : $placeholder;
+        ?>
         <div
           class="cursor-pointer group bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm card-hover border border-gray-200 dark:border-gray-700 transition-all duration-300"
           onclick="openModal(<?php echo $index; ?>)"
         >
           <div class="h-48 overflow-hidden">
             <img
-              src="<?php echo $certificate['image']; ?>"
+              src="<?php echo $image; ?>"
               alt="<?php echo $certificate['title']; ?>"
+              onerror="this.src='<?php echo $placeholder; ?>'"
               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             />
           </div>
@@ -43,7 +51,6 @@
   <!-- Modal -->
   <div id="certificateModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-50 modal-fade-in">
     <div class="relative max-w-4xl max-h-[80vh] flex flex-col items-center ">
-      <!-- Close Button -->
       <button
         onclick="closeModal()"
         class="absolute -top-12 right-0 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-lg text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
@@ -56,6 +63,7 @@
         src=""
         alt="Certificate"
         class="max-h-[50vh] rounded-lg shadow-2xl modal-content-scale"
+        onerror="this.src='<?php echo $placeholder; ?>'"
       />
       <div class="mt-4 text-white text-center">
         <h3 id="modalTitle" class="text-xl font-bold"></h3>

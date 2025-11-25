@@ -97,7 +97,7 @@ include './includes/head.php';
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
     <div class="pt-10 pb-8 px-6">
         <div class="max-w-7xl mx-auto">
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center justify-between mb-6 flex-col gap-3 md:flex-row">
                 <div>
                     <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">Manage Projects</h1>
                     <p class="text-gray-600 dark:text-gray-400">Add, edit, and organize your portfolio projects</p>
@@ -153,7 +153,7 @@ include './includes/head.php';
                                         <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span></p>
                                         <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF or WEBP</p>
                                     </div>
-                                    <input type="file" name="image" id="image_upload" accept="image/*" class="hidden" required onchange="showImagePreview(event)">
+                                    <input type="file" name="image" id="image_upload" accept="image/*" class="hidden"  onchange="showImagePreview(event)">
                                 </label>
                             </div>
                             <div id="current_image_preview" class="mt-4"></div>

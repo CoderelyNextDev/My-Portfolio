@@ -1,4 +1,4 @@
-<!-- NOTE:: I didn't use inline css -->
+<!-- NOTE:: I didn't use inline css i use tailwind -->
 <section id="hero" class="relative mt-5 md:mt-0 min-h-screen flex flex-col items-center justify-center px-4">
   <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col lg:flex-row items-center gap-8 py-8">
@@ -54,10 +54,12 @@
         <div class="mx-auto rounded-xl mt-8">
           <blockquote class="text-left">
             <p class="text-xl italic text-gray-800 dark:text-gray-300 opacity-0 animate-fade-in">
-              "I am a passionate <span class="font-semibold not-italic opacity-0 animate-fade-in-delay-3">Web Developer</span>
-              and can also work in <span class="font-semibold not-italic opacity-0 animate-fade-in-delay-4">Web Design</span>."
+              <!-- "I am a passionate <span class="font-semibold not-italic opacity-0 animate-fade-in-delay-3">Web Developer</span>
+              and can also work in <span class="font-semibold not-italic opacity-0 animate-fade-in-delay-4">Web Design</span>." -->
+              <?= $personalInfo['tagline'] ?>
             </p>
           </blockquote>
+         
 
           <div class="flex flex-col sm:flex-row gap-4 mt-8 opacity-0 animate-fade-in">
             <a href="resume.pdf" download class="flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg shadow-md transition-all duration-200">
